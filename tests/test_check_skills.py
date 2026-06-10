@@ -61,6 +61,8 @@ class CheckSkillsScriptTest(unittest.TestCase):
             ## 输出格式
             ```text
             【修改文件】
+            【验证结果】
+            【未验证项】
             ```
 
             ## 约束
@@ -164,6 +166,89 @@ class CheckSkillsScriptTest(unittest.TestCase):
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("未引用的辅助文件", result.stdout)
         self.assertIn("checklist.md", result.stdout)
+
+    def test_fails_when_development_skill_lacks_verification_language(self) -> None:
+        write_text(
+            self.temp_dir / "skills" / "frontend-development" / "SKILL.md",
+            """
+            ---
+            name: frontend-development
+            description: 示例
+            ---
+
+            # 前端开发 Skill
+
+            ## 适用场景
+            - 页面开发
+
+            ## 输入
+            - 已确认需求
+
+            ## 工作流程
+            1. 修改页面
+
+            ## 输出格式
+            ```text
+            【修改摘要】
+            【风险点】
+            ```
+
+            ## 约束
+            - 不做无关重构
+
+            ## 不适用场景
+            - 纯后端任务
+            """,
+        )
+
+        result = self.run_check()
+
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("开发类 Skill 缺少关键信息", result.stdout)
+        self.assertIn("验证", result.stdout)
+        self.assertIn("未验证项", result.stdout)
+
+    def test_fails_when_review_skill_lacks_evidence_and_blocker_language(self) -> None:
+        write_text(
+            self.temp_dir / "skills" / "code-review" / "SKILL.md",
+            """
+            ---
+            name: code-review
+            description: 示例
+            ---
+
+            # 代码审查 Skill
+
+            ## 适用场景
+            - 审查 diff
+
+            ## 输入
+            - diff
+
+            ## 工作流程
+            1. 查看改动
+
+            ## 输出格式
+            ```text
+            【结论】
+            【问题】
+            ```
+
+            ## 约束
+            - 聚焦风险
+
+            ## 不适用场景
+            - 无 diff 的场景
+            """,
+        )
+
+        result = self.run_check()
+
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("审查类 Skill 缺少关键信息", result.stdout)
+        self.assertIn("证据", result.stdout)
+        self.assertIn("风险等级", result.stdout)
+        self.assertIn("是否阻塞", result.stdout)
 
 
 if __name__ == "__main__":

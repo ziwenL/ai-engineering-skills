@@ -17,6 +17,25 @@ REQUIRED_SECTIONS = (
     "## 约束",
     "## 不适用场景",
 )
+DEVELOPMENT_SKILLS = {
+    "android-development",
+    "ios-development",
+    "android-to-ios-porting",
+    "api-design",
+    "data-model-design",
+    "technical-design",
+    "test-case-generation",
+    "build-ci-fix",
+    "backend-development",
+    "frontend-development",
+}
+REVIEW_SKILLS = {
+    "code-review",
+    "security-review",
+    "performance-review",
+}
+DEVELOPMENT_REQUIRED_FRAGMENTS = ("验证", "未验证项")
+REVIEW_REQUIRED_FRAGMENTS = ("证据", "风险等级", "是否阻塞")
 
 
 def read_text(path: Path) -> str:
@@ -50,6 +69,10 @@ def find_unreferenced_support_files(skill_dir: Path, text: str) -> list[str]:
     return [name for name in support_files if name not in text]
 
 
+def find_missing_fragments(text: str, fragments: tuple[str, ...]) -> list[str]:
+    return [fragment for fragment in fragments if fragment not in text]
+
+
 def validate_skill(skill_dir: Path) -> list[str]:
     issues: list[str] = []
     skill_file = skill_dir / "SKILL.md"
@@ -70,6 +93,16 @@ def validate_skill(skill_dir: Path) -> list[str]:
     unreferenced_files = find_unreferenced_support_files(skill_dir, text)
     if unreferenced_files:
         issues.append(f"未引用的辅助文件: {', '.join(unreferenced_files)}")
+
+    if skill_dir.name in DEVELOPMENT_SKILLS:
+        missing = find_missing_fragments(text, DEVELOPMENT_REQUIRED_FRAGMENTS)
+        if missing:
+            issues.append(f"开发类 Skill 缺少关键信息: {', '.join(missing)}")
+
+    if skill_dir.name in REVIEW_SKILLS:
+        missing = find_missing_fragments(text, REVIEW_REQUIRED_FRAGMENTS)
+        if missing:
+            issues.append(f"审查类 Skill 缺少关键信息: {', '.join(missing)}")
 
     return issues
 
