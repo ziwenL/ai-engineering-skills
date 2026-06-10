@@ -20,6 +20,7 @@ REQUIRED_SECTIONS = (
 DEVELOPMENT_SKILLS = {
     "android-development",
     "ios-development",
+    "android-to-ios-bootstrap",
     "android-to-ios-porting",
     "api-design",
     "data-model-design",

@@ -73,6 +73,22 @@ requirement-analysis
 
 每一步都需要检查输出是否符合 README 中的验收标准。
 
+如果是 Android 已有实现，需要同步到 iOS，建议额外使用这条路线：
+
+```text
+android-to-ios-bootstrap
+→ android-to-ios-porting
+→ ios-development
+```
+
+可以按 iOS 当前状态分三种情况使用：
+
+```text
+1. iOS 项目未创建：先用 android-to-ios-bootstrap 判断工程骨架与首批模块
+2. iOS 项目已创建但结构不稳定：先用 android-to-ios-bootstrap 补结构，再进入 porting
+3. iOS 项目已创建且结构稳定：由 android-to-ios-bootstrap 确认后进入 android-to-ios-porting
+```
+
 ## 4. Skill 仓库维护补充
 
 如果你在维护 `ai-engineering-skills` 仓库本身，而不是只在业务项目里使用它，建议在提交前执行：

@@ -250,6 +250,143 @@ class CheckSkillsScriptTest(unittest.TestCase):
         self.assertIn("风险等级", result.stdout)
         self.assertIn("是否阻塞", result.stdout)
 
+    def test_passes_for_android_to_ios_bootstrap_with_referenced_checklist(self) -> None:
+        write_text(
+            self.temp_dir / "skills" / "android-to-ios-bootstrap" / "SKILL.md",
+            """
+            ---
+            name: android-to-ios-bootstrap
+            description: 示例
+            ---
+
+            # Android 到 iOS 启动 Skill
+
+            ## 适用场景
+            - Android 已有实现，iOS 状态不明确
+
+            ## 输入
+            - Android 代码
+            - `bootstrap-checklist.md`
+
+            ## 工作流程
+            1. 读取 `bootstrap-checklist.md`
+            2. 判断 iOS 状态
+
+            ## 输出格式
+            ```text
+            【建议下一步 Skill】
+            【验证方式】
+            【未验证项】
+            ```
+
+            ## 约束
+            - 不要直接进入完整实现
+
+            ## 不适用场景
+            - Android 尚未稳定
+            """,
+        )
+        write_text(
+            self.temp_dir / "skills" / "android-to-ios-bootstrap" / "bootstrap-checklist.md",
+            """
+            # Bootstrap Checklist
+            - [ ] iOS 项目是否存在
+            """,
+        )
+
+        result = self.run_check()
+
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn("[OK] android-to-ios-bootstrap", result.stdout)
+
+    def test_fails_when_android_to_ios_bootstrap_checklist_is_not_referenced(self) -> None:
+        write_text(
+            self.temp_dir / "skills" / "android-to-ios-bootstrap" / "SKILL.md",
+            """
+            ---
+            name: android-to-ios-bootstrap
+            description: 示例
+            ---
+
+            # Android 到 iOS 启动 Skill
+
+            ## 适用场景
+            - Android 已有实现，iOS 状态不明确
+
+            ## 输入
+            - Android 代码
+
+            ## 工作流程
+            1. 判断 iOS 状态
+
+            ## 输出格式
+            ```text
+            【建议下一步 Skill】
+            【验证方式】
+            【未验证项】
+            ```
+
+            ## 约束
+            - 不要直接进入完整实现
+
+            ## 不适用场景
+            - Android 尚未稳定
+            """,
+        )
+        write_text(
+            self.temp_dir / "skills" / "android-to-ios-bootstrap" / "bootstrap-checklist.md",
+            """
+            # Bootstrap Checklist
+            - [ ] iOS 项目是否存在
+            """,
+        )
+
+        result = self.run_check()
+
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("未引用的辅助文件", result.stdout)
+        self.assertIn("bootstrap-checklist.md", result.stdout)
+
+    def test_fails_when_android_to_ios_bootstrap_lacks_unverified_item_language(self) -> None:
+        write_text(
+            self.temp_dir / "skills" / "android-to-ios-bootstrap" / "SKILL.md",
+            """
+            ---
+            name: android-to-ios-bootstrap
+            description: 示例
+            ---
+
+            # Android 到 iOS 启动 Skill
+
+            ## 适用场景
+            - Android 已有实现，iOS 状态不明确
+
+            ## 输入
+            - Android 代码
+
+            ## 工作流程
+            1. 判断 iOS 状态
+
+            ## 输出格式
+            ```text
+            【建议下一步 Skill】
+            【风险点】
+            ```
+
+            ## 约束
+            - 不要直接进入完整实现
+
+            ## 不适用场景
+            - Android 尚未稳定
+            """,
+        )
+
+        result = self.run_check()
+
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("开发类 Skill 缺少关键信息", result.stdout)
+        self.assertIn("未验证项", result.stdout)
+
 
 if __name__ == "__main__":
     unittest.main()

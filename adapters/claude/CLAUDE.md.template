@@ -45,6 +45,7 @@ Claude Code 使用本文件作为项目级入口。
 | 数据模型设计 | `.ai/ai-engineering-skills/skills/data-model-design/SKILL.md` |
 | Android 开发 | `.ai/ai-engineering-skills/skills/android-development/SKILL.md` |
 | iOS 开发 | `.ai/ai-engineering-skills/skills/ios-development/SKILL.md` |
+| Android 已有实现，但 iOS 项目未创建 / 结构未稳 | `.ai/ai-engineering-skills/skills/android-to-ios-bootstrap/SKILL.md` |
 | Android 复刻 iOS | `.ai/ai-engineering-skills/skills/android-to-ios-porting/SKILL.md` |
 | 服务端开发 | `.ai/ai-engineering-skills/skills/backend-development/SKILL.md` |
 | 前端开发 | `.ai/ai-engineering-skills/skills/frontend-development/SKILL.md` |
@@ -71,6 +72,14 @@ context-bootstrap
 → development
 → code-review
 → session-retrospective
+```
+
+如果任务是“Android 端已有实现，需要同步到 iOS”，默认先走：
+
+```text
+android-to-ios-bootstrap
+→ android-to-ios-porting
+→ ios-development
 ```
 
 ## 开发约束

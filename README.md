@@ -137,6 +137,7 @@ ai-engineering-skills/
 │   │
 │   ├── android-development/                 # Android 开发
 │   ├── ios-development/                     # iOS 开发
+│   ├── android-to-ios-bootstrap/            # Android 已有实现时的 iOS 启动与分流
 │   ├── android-to-ios-porting/              # Android 到 iOS 复刻
 │   ├── backend-development/                 # 服务端开发
 │   ├── frontend-development/                # Web / H5 / 管理后台开发
@@ -819,6 +820,8 @@ AI 的输出应该至少包含：
 ```text
 Android 项目：android-development
 iOS 项目：ios-development
+Android 已有实现，但 iOS 项目未创建 / 结构未稳：android-to-ios-bootstrap
+Android 已有实现，且 iOS 项目已存在并可复用：android-to-ios-porting
 服务端项目：backend-development
 Web / H5 / 管理后台：frontend-development
 ```
@@ -850,6 +853,31 @@ Web / H5 / 管理后台：frontend-development
 4. 明确状态处理、错误处理和空状态。
 5. 不做无关重构。
 6. 实现后给出验证方式、验证结果和未验证项。
+```
+
+#### Android 复刻到 iOS 输入示例
+
+```text
+请使用 android-to-ios-bootstrap skill 先判断当前任务应该如何进入 iOS 复刻流程。
+
+已知条件：
+1. Android 端功能已经存在，可作为对齐基准。
+2. 需要判断 iOS 端是尚未创建工程、工程已创建但结构不稳定，还是已具备可复用结构。
+
+要求：
+1. 先概括 Android 现有行为与必须保持一致的交互。
+2. 判断 iOS 当前状态属于哪一类。
+3. 如果 iOS 工程未创建，给出最小工程骨架、首批目录和首批文件建议。
+4. 如果 iOS 工程已创建但结构不稳定，给出需要先补齐的结构与原因。
+5. 如果 iOS 工程已创建且可复用，明确说明为什么可以直接进入 android-to-ios-porting。
+6. 最后给出建议下一步 Skill、验证方式、未验证项和风险点。
+```
+
+```text
+典型路由：
+1. iOS 项目未创建：android-to-ios-bootstrap → ios-development
+2. iOS 项目已创建但结构不稳定：android-to-ios-bootstrap → android-to-ios-porting
+3. iOS 项目已创建且结构稳定：android-to-ios-bootstrap → android-to-ios-porting → ios-development
 ```
 
 #### 服务端输入示例

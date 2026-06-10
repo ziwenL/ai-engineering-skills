@@ -7,6 +7,7 @@
 - requirement-analysis
 - technical-design
 - development
+- android-to-ios-bootstrap / android-to-ios-porting / ios-development 跨端复刻链路
 - session-retrospective
 - Skill 统一结构标准
 - check_skills.py 基础校验
