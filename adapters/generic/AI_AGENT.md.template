@@ -1,0 +1,11 @@
+# AI_AGENT.md
+
+本项目使用 `.ai/ai-engineering-skills/skills/` 作为通用 AI Coding Skills 来源。
+
+所有 Agent 必须：
+
+1. 读取 common。
+2. 根据任务类型读取对应 Skill。
+3. 先分析、再设计、再实现。
+4. 修改后验证。
+5. 任务结束判断是否需要沉淀经验。
