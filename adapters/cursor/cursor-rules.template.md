@@ -11,8 +11,10 @@
 规则：
 
 1. 先读取 common。
-2. 根据任务读取对应 Skill。
+2. 根据任务读取对应 Skill；如果同目录还有 `checklist.md`、`architecture.md`、`log-analysis.md` 等辅助文件，也要继续读取。
 3. 先分析，再设计，再实现。
-4. 不修改无关文件。
-5. 不做无关重构。
-6. 任务结束执行 session-retrospective。
+4. 开发类 Skill 输出时要写清验证方式、验证结果、未验证项。
+5. 审查类 Skill 输出时要写清证据、风险等级、是否阻塞。
+6. 不修改无关文件。
+7. 不做无关重构。
+8. 任务结束执行 session-retrospective。

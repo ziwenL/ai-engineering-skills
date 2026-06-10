@@ -90,6 +90,30 @@ your-project/.ai/ai-engineering-skills/
 有没有需要写入 CLAUDE.md / AGENTS.md / docs？
 ```
 
+### 5. Skill 标准化
+
+从仓库维护者视角，一个标准 Skill 至少应满足：
+
+```text
+1. 包含固定章节：
+   - 适用场景
+   - 输入
+   - 工作流程
+   - 输出格式
+   - 约束
+   - 不适用场景
+2. 如果同目录有 checklist / architecture / log-analysis 等辅助文件，
+   主 SKILL.md 必须明确要求读取它们
+3. 开发类 Skill 必须说明验证方式、验证结果和未验证项
+4. 审查类 Skill 必须说明证据、风险等级和是否阻塞
+```
+
+可使用以下命令检查 Skills 仓库自身是否符合当前标准：
+
+```powershell
+python scripts\check_skills.py
+```
+
 ---
 
 ## 三、仓库结构
@@ -142,6 +166,15 @@ ai-engineering-skills/
 ├── prompts/                                 # 用 AI 生成 / 迭代 Skill 的提示词
 ├── scripts/                                 # 安装、检查、初始化脚本
 └── docs/                                    # 仓库自身说明
+```
+
+其中建议特别关注：
+
+```text
+skills/<skill-name>/SKILL.md               # 主 Skill
+skills/<skill-name>/*.md                   # 辅助 checklist / architecture / reference
+scripts/check_skills.py                    # Skill 结构与关键能力校验
+docs/skill-writing-guide.md                # Skill 编写标准
 ```
 
 ---
@@ -816,7 +849,7 @@ Web / H5 / 管理后台：frontend-development
 3. 保持与 Android 或产品要求一致。
 4. 明确状态处理、错误处理和空状态。
 5. 不做无关重构。
-6. 实现后说明验证方式。
+6. 实现后给出验证方式、验证结果和未验证项。
 ```
 
 #### 服务端输入示例
@@ -830,7 +863,7 @@ Web / H5 / 管理后台：frontend-development
 3. 不修改生产配置。
 4. 不引入不必要的新依赖。
 5. 补充必要测试。
-6. 说明兼容性、回滚方式和风险点。
+6. 说明兼容性、回滚方式、验证结果、未验证项和风险点。
 ```
 
 #### 输出验收标准
@@ -842,7 +875,7 @@ AI 实现后应该输出：
 每个文件的修改原因
 核心实现逻辑
 测试 / 编译结果
-无法测试的原因
+未验证项
 潜在风险
 人工验证步骤
 ```
@@ -884,10 +917,13 @@ Review 输出应该包含：
 ```text
 结论：通过 / 有条件通过 / 不建议合并
 主要问题
+证据
+风险等级
 次要问题
 测试缺口
 风险点
 建议修改
+是否阻塞合并
 ```
 
 #### 你需要人工做的事
@@ -1044,7 +1080,9 @@ AI 应该输出：
 
 ```text
 性能风险点
+风险等级
 可能影响范围
+证据
 验证方法
 优化建议
 是否阻塞发版
@@ -1325,6 +1363,7 @@ AI 不应该直接做：
 先由 session-retrospective 判断是否值得沉淀
 再由 skill-authoring 生成或修改 Skill
 然后由 code-review 审查 Skill 本身
+再运行 python scripts/check_skills.py
 最后提交到 ai-engineering-skills 仓库
 ```
 

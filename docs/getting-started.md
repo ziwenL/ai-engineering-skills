@@ -72,3 +72,27 @@ requirement-analysis
 ```
 
 每一步都需要检查输出是否符合 README 中的验收标准。
+
+## 4. Skill 仓库维护补充
+
+如果你在维护 `ai-engineering-skills` 仓库本身，而不是只在业务项目里使用它，建议在提交前执行：
+
+```powershell
+python scripts\check_skills.py
+```
+
+开发类 Skill 重点检查：
+
+```text
+是否写清验证方式
+是否输出验证结果
+是否明确未验证项
+```
+
+审查类 Skill 重点检查：
+
+```text
+是否给出证据
+是否标记风险等级
+是否说明是否阻塞
+```

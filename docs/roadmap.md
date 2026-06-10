@@ -8,6 +8,8 @@
 - technical-design
 - development
 - session-retrospective
+- Skill 统一结构标准
+- check_skills.py 基础校验
 
 ## 第二阶段
 
@@ -15,6 +17,8 @@
 - security-review
 - performance-review
 - build-ci-fix
+- 开发类 Skill 验证闭环
+- 审查类 Skill 证据 / 风险等级 / 阻塞判断
 
 ## 第三阶段
 
@@ -30,3 +34,4 @@
 - Crash 平台
 - 自动生成 MR
 - 人工 Review 合并
+- 文档、适配器、Prompt 与 Skill 标准完全对齐
