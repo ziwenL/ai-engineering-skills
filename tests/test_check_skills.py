@@ -388,5 +388,214 @@ class CheckSkillsScriptTest(unittest.TestCase):
         self.assertIn("未验证项", result.stdout)
 
 
+    def test_passes_for_greenfield_bootstrap_with_referenced_checklist(self) -> None:
+        write_text(
+            self.temp_dir / "skills" / "greenfield-bootstrap" / "SKILL.md",
+            """
+            ---
+            name: greenfield-bootstrap
+            description: 示例
+            ---
+
+            # Greenfield Bootstrap Skill
+
+            ## 适用场景
+            - 从 0 创建新项目
+            ## 输入
+            - 已确认目标
+            - `bootstrap-checklist.md`
+
+            ## 工作流程
+            1. 读取 `bootstrap-checklist.md`
+            2. 判断启动顺序
+
+            ## 输出格式
+            ```text
+            【推荐启动顺序】
+            【验证方式】
+            【未验证项】
+            ```
+
+            ## 约束
+            - 不直接展开完整实现
+
+            ## 不适用场景
+            - 已有稳定项目继续开发
+            """,
+        )
+        write_text(
+            self.temp_dir / "skills" / "greenfield-bootstrap" / "bootstrap-checklist.md",
+            """
+            # Bootstrap Checklist
+            - [ ] 是否需要多端联动启动
+            """,
+        )
+
+        result = self.run_check()
+
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn("[OK] greenfield-bootstrap", result.stdout)
+
+    def test_passes_for_android_app_scaffold_with_referenced_support_files(self) -> None:
+        write_text(
+            self.temp_dir / "skills" / "android-app-scaffold" / "SKILL.md",
+            """
+            ---
+            name: android-app-scaffold
+            description: 示例
+            ---
+
+            # Android App Scaffold Skill
+
+            ## 适用场景
+            - 创建 Android 新项目骨架
+            ## 输入
+            - 已确认目标
+            - `scaffold-checklist.md`
+            - `default-stack.md`
+
+            ## 工作流程
+            1. 读取 `scaffold-checklist.md`
+            2. 读取 `default-stack.md`
+            3. 生成最小骨架
+
+            ## 输出格式
+            ```text
+            【推荐默认方案】
+            【验证方式】
+            【未验证项】
+            ```
+
+            ## 约束
+            - 只创建最小可运行骨架
+
+            ## 不适用场景
+            - 已有稳定 Android 项目继续开发
+            """,
+        )
+        write_text(
+            self.temp_dir / "skills" / "android-app-scaffold" / "scaffold-checklist.md",
+            """
+            # Scaffold Checklist
+            - [ ] 是否确实需要多模块
+            """,
+        )
+        write_text(
+            self.temp_dir / "skills" / "android-app-scaffold" / "default-stack.md",
+            """
+            # Default Stack
+            - 默认：Jetpack Compose
+            """,
+        )
+
+        result = self.run_check()
+
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn("[OK] android-app-scaffold", result.stdout)
+
+    def test_fails_when_greenfield_bootstrap_checklist_is_not_referenced(self) -> None:
+        write_text(
+            self.temp_dir / "skills" / "greenfield-bootstrap" / "SKILL.md",
+            """
+            ---
+            name: greenfield-bootstrap
+            description: 示例
+            ---
+
+            # Greenfield Bootstrap Skill
+
+            ## 适用场景
+            - 从 0 创建新项目
+            ## 输入
+            - 已确认目标
+
+            ## 工作流程
+            1. 判断启动顺序
+
+            ## 输出格式
+            ```text
+            【推荐启动顺序】
+            【验证方式】
+            【未验证项】
+            ```
+
+            ## 约束
+            - 不直接展开完整实现
+
+            ## 不适用场景
+            - 已有稳定项目继续开发
+            """,
+        )
+        write_text(
+            self.temp_dir / "skills" / "greenfield-bootstrap" / "bootstrap-checklist.md",
+            """
+            # Bootstrap Checklist
+            - [ ] 是否需要多端联动启动
+            """,
+        )
+
+        result = self.run_check()
+
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("未引用的辅助文件", result.stdout)
+        self.assertIn("bootstrap-checklist.md", result.stdout)
+
+    def test_fails_when_backend_service_scaffold_lacks_unverified_item_language(self) -> None:
+        write_text(
+            self.temp_dir / "skills" / "backend-service-scaffold" / "SKILL.md",
+            """
+            ---
+            name: backend-service-scaffold
+            description: 示例
+            ---
+
+            # Backend Service Scaffold Skill
+
+            ## 适用场景
+            - 创建服务端骨架
+            ## 输入
+            - 已确认目标
+            - `scaffold-checklist.md`
+            - `default-stack.md`
+
+            ## 工作流程
+            1. 读取 `scaffold-checklist.md`
+            2. 读取 `default-stack.md`
+
+            ## 输出格式
+            ```text
+            【推荐默认方案】
+            【初始化步骤】
+            ```
+
+            ## 约束
+            - 只创建最小可运行骨架
+
+            ## 不适用场景
+            - 已有稳定服务继续开发
+            """,
+        )
+        write_text(
+            self.temp_dir / "skills" / "backend-service-scaffold" / "scaffold-checklist.md",
+            """
+            # Scaffold Checklist
+            - [ ] 是否需要数据库
+            """,
+        )
+        write_text(
+            self.temp_dir / "skills" / "backend-service-scaffold" / "default-stack.md",
+            """
+            # Default Stack
+            - 默认：轻量 REST 服务
+            """,
+        )
+
+        result = self.run_check()
+
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("开发类 Skill 缺少关键信息", result.stdout)
+        self.assertIn("未验证项", result.stdout)
+
+
 if __name__ == "__main__":
     unittest.main()

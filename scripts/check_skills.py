@@ -29,6 +29,10 @@ DEVELOPMENT_SKILLS = {
     "build-ci-fix",
     "backend-development",
     "frontend-development",
+    "greenfield-bootstrap",
+    "android-app-scaffold",
+    "ios-app-scaffold",
+    "backend-service-scaffold",
 }
 REVIEW_SKILLS = {
     "code-review",
