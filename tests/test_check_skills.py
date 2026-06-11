@@ -5,11 +5,16 @@ import tempfile
 import textwrap
 import unittest
 import os
+import importlib.util
 from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 CHECK_SCRIPT = REPO_ROOT / "scripts" / "check_skills.py"
+CHECK_SCRIPT_SPEC = importlib.util.spec_from_file_location("check_skills_module", CHECK_SCRIPT)
+CHECK_SCRIPT_MODULE = importlib.util.module_from_spec(CHECK_SCRIPT_SPEC)
+assert CHECK_SCRIPT_SPEC is not None and CHECK_SCRIPT_SPEC.loader is not None
+CHECK_SCRIPT_SPEC.loader.exec_module(CHECK_SCRIPT_MODULE)
 
 
 def write_text(path: Path, content: str) -> None:
@@ -492,6 +497,53 @@ class CheckSkillsScriptTest(unittest.TestCase):
 
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assertIn("[OK] android-app-scaffold", result.stdout)
+
+    def test_passes_for_ios_app_scaffold_with_referenced_support_files(self) -> None:
+        sections = "\n\n".join(
+            (
+                f"{CHECK_SCRIPT_MODULE.REQUIRED_SECTIONS[0]}\n- 创建 iOS 新项目骨架",
+                f"{CHECK_SCRIPT_MODULE.REQUIRED_SECTIONS[1]}\n- 已确认目标\n- `scaffold-checklist.md`\n- `default-stack.md`",
+                f"{CHECK_SCRIPT_MODULE.REQUIRED_SECTIONS[2]}\n1. 读取 `scaffold-checklist.md`\n2. 读取 `default-stack.md`\n3. 生成最小骨架",
+                f"{CHECK_SCRIPT_MODULE.REQUIRED_SECTIONS[3]}\n```text\n【推荐默认方案】\n【{CHECK_SCRIPT_MODULE.DEVELOPMENT_REQUIRED_FRAGMENTS[0]}方式】\n【{CHECK_SCRIPT_MODULE.DEVELOPMENT_REQUIRED_FRAGMENTS[1]}】\n```",
+                f"{CHECK_SCRIPT_MODULE.REQUIRED_SECTIONS[4]}\n- 只创建最小可运行骨架",
+                f"{CHECK_SCRIPT_MODULE.REQUIRED_SECTIONS[5]}\n- 已有稳定 iOS 项目继续开发",
+            )
+        )
+        skill_text = "\n".join(
+            (
+                "---",
+                "name: ios-app-scaffold",
+                "description: 示例",
+                "---",
+                "",
+                "# iOS App Scaffold Skill",
+                "",
+                sections,
+            )
+        )
+        write_text(
+            self.temp_dir / "skills" / "ios-app-scaffold" / "SKILL.md",
+            skill_text,
+        )
+        write_text(
+            self.temp_dir / "skills" / "ios-app-scaffold" / "scaffold-checklist.md",
+            """
+            # Scaffold Checklist
+            - [ ] 鏄惁鍙渶瑕佸崟宸ョ▼璧锋
+            """,
+        )
+        write_text(
+            self.temp_dir / "skills" / "ios-app-scaffold" / "default-stack.md",
+            """
+            # Default Stack
+            - 榛樿锛歋wiftUI
+            """,
+        )
+
+        result = self.run_check()
+
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn("[OK] ios-app-scaffold", result.stdout)
 
     def test_fails_when_greenfield_bootstrap_checklist_is_not_referenced(self) -> None:
         write_text(
