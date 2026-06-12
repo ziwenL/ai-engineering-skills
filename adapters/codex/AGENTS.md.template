@@ -43,6 +43,10 @@ Codex 使用本文件作为项目级入口。
 | 技术方案 | `.ai/ai-engineering-skills/skills/technical-design/SKILL.md` |
 | 接口设计 | `.ai/ai-engineering-skills/skills/api-design/SKILL.md` |
 | 数据模型设计 | `.ai/ai-engineering-skills/skills/data-model-design/SKILL.md` |
+| 新项目起盘 / 多端启动判断 | `.ai/ai-engineering-skills/skills/greenfield-bootstrap/SKILL.md` |
+| Android 新项目骨架 | `.ai/ai-engineering-skills/skills/android-app-scaffold/SKILL.md` |
+| iOS 新项目骨架 | `.ai/ai-engineering-skills/skills/ios-app-scaffold/SKILL.md` |
+| 服务端新项目骨架 | `.ai/ai-engineering-skills/skills/backend-service-scaffold/SKILL.md` |
 | Android 开发 | `.ai/ai-engineering-skills/skills/android-development/SKILL.md` |
 | iOS 开发 | `.ai/ai-engineering-skills/skills/ios-development/SKILL.md` |
 | Android 已有实现，但 iOS 项目未创建 / 结构未稳 | `.ai/ai-engineering-skills/skills/android-to-ios-bootstrap/SKILL.md` |
@@ -80,6 +84,16 @@ context-bootstrap
 android-to-ios-bootstrap
 → android-to-ios-porting
 → ios-development
+```
+
+如果任务是“从 0 创建 Android / iOS / Backend 项目”，默认先走：
+
+```text
+greenfield-bootstrap
+→ technical-design
+→ api-design（如涉及服务端接口）
+→ scaffold skill
+→ development skill
 ```
 
 ## 开发约束

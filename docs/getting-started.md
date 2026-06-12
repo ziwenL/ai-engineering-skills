@@ -73,6 +73,18 @@ requirement-analysis
 
 每一步都需要检查输出是否符合 README 中的验收标准。
 
+如果项目还没有创建，建议先走这条起盘路线：
+
+```text
+context-bootstrap
+→ greenfield-bootstrap
+→ technical-design
+→ api-design（如涉及服务端接口）
+→ backend-service-scaffold
+→ android-app-scaffold / ios-app-scaffold
+→ backend-development / android-development / ios-development
+```
+
 如果是 Android 已有实现，需要同步到 iOS，建议额外使用这条路线：
 
 ```text

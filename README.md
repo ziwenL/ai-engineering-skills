@@ -135,6 +135,11 @@ ai-engineering-skills/
 │   ├── api-design/                          # 接口设计
 │   ├── data-model-design/                   # 数据结构 / 数据库 / DTO 设计
 │   │
+│   ├── greenfield-bootstrap/                # 新项目起盘分流与多端启动判断
+│   ├── android-app-scaffold/                # Android 新项目骨架
+│   ├── ios-app-scaffold/                    # iOS 新项目骨架
+│   ├── backend-service-scaffold/            # 服务端新项目骨架
+│   │
 │   ├── android-development/                 # Android 开发
 │   ├── ios-development/                     # iOS 开发
 │   ├── android-to-ios-bootstrap/            # Android 已有实现时的 iOS 启动与分流
@@ -818,6 +823,10 @@ AI 的输出应该至少包含：
 根据项目类型选择一个开发 Skill：
 
 ```text
+多端从 0 起盘：greenfield-bootstrap
+Android 新项目：android-app-scaffold
+iOS 新项目：ios-app-scaffold
+服务端新项目：backend-service-scaffold
 Android 项目：android-development
 iOS 项目：ios-development
 Android 已有实现，但 iOS 项目未创建 / 结构未稳：android-to-ios-bootstrap
@@ -878,6 +887,32 @@ Web / H5 / 管理后台：frontend-development
 1. iOS 项目未创建：android-to-ios-bootstrap → ios-development
 2. iOS 项目已创建但结构不稳定：android-to-ios-bootstrap → android-to-ios-porting
 3. iOS 项目已创建且结构稳定：android-to-ios-bootstrap → android-to-ios-porting → ios-development
+```
+
+#### 从 0 起盘输入示例
+
+```text
+请使用 greenfield-bootstrap skill，判断当前项目应如何从 0 起盘。
+
+已知条件：
+1. 当前项目还没有创建完整工程。
+2. 目标端包含 Android、iOS、Backend 中的一个或多个。
+3. 需要明确推荐启动顺序、共享约束和后续 scaffold 路由。
+
+要求：
+1. 先判断是单端启动还是多端联动启动。
+2. 如果涉及服务端接口，明确是否应先做 api-design 和 backend-service-scaffold。
+3. 输出多端职责边界、共享命名与接口约束。
+4. 指出本阶段不应提前展开的范围。
+5. 最后给出下一步建议 Skill、验证方式、未验证项和风险点。
+```
+
+```text
+推荐路线：
+1. 项目尚未创建：context-bootstrap → greenfield-bootstrap
+2. 涉及服务端接口：greenfield-bootstrap → technical-design → api-design → backend-service-scaffold
+3. 涉及移动端：backend-service-scaffold 之后进入 android-app-scaffold / ios-app-scaffold
+4. 工程骨架稳定后，再进入对应 development skill
 ```
 
 #### 服务端输入示例

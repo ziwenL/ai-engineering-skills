@@ -6,6 +6,7 @@
 - context-bootstrap
 - requirement-analysis
 - technical-design
+- greenfield-bootstrap / android-app-scaffold / ios-app-scaffold / backend-service-scaffold 起盘链路
 - development
 - android-to-ios-bootstrap / android-to-ios-porting / ios-development 跨端复刻链路
 - session-retrospective

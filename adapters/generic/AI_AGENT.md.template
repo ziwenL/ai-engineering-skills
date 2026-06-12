@@ -6,6 +6,7 @@
 
 1. 读取 common。
 2. 根据任务类型读取对应 Skill。
+   如果是“从 0 创建新项目”，优先读取 `greenfield-bootstrap`。
    如果是“Android 已有实现，需要同步到 iOS”，优先读取 `android-to-ios-bootstrap`。
 3. 先分析、再设计、再实现。
 4. 修改后验证。

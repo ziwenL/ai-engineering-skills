@@ -12,6 +12,7 @@
 
 1. 先读取 common。
 2. 根据任务读取对应 Skill；如果同目录还有 `checklist.md`、`architecture.md`、`log-analysis.md` 等辅助文件，也要继续读取。
+   如果是“从 0 创建 Android / iOS / Backend 项目”，优先读取 `greenfield-bootstrap`，再决定进入对应的 scaffold skill。
    如果是“Android 已有实现，需要同步到 iOS”，优先读取 `android-to-ios-bootstrap`，再决定是否进入 `android-to-ios-porting` 或 `ios-development`。
 3. 先分析，再设计，再实现。
 4. 开发类 Skill 输出时要写清验证方式、验证结果、未验证项。
