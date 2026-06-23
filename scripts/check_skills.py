@@ -41,10 +41,29 @@ REVIEW_SKILLS = {
 }
 DEVELOPMENT_REQUIRED_FRAGMENTS = ("验证", "未验证项")
 REVIEW_REQUIRED_FRAGMENTS = ("证据", "风险等级", "是否阻塞")
+ANDROID_COMPOSE_PREVIEW_SKILLS = {
+    "android-development",
+    "android-app-scaffold",
+}
+ANDROID_COMPOSE_PREVIEW_REQUIRED_FRAGMENTS = (
+    "@Preview",
+    "ViewModel",
+    "fake/mock",
+    "private",
+    "network/database",
+)
 
 
 def read_text(path: Path) -> str:
     return path.read_text(encoding="utf-8")
+
+
+def read_skill_bundle_text(skill_dir: Path) -> str:
+    return "\n".join(
+        read_text(path)
+        for path in sorted(skill_dir.iterdir())
+        if path.is_file()
+    )
 
 
 def parse_frontmatter(text: str) -> dict[str, str]:
@@ -86,6 +105,7 @@ def validate_skill(skill_dir: Path) -> list[str]:
         return [f"缺少文件: {skill_dir.name}/SKILL.md"]
 
     text = read_text(skill_file)
+    bundle_text = read_skill_bundle_text(skill_dir)
     frontmatter = parse_frontmatter(text)
     missing_keys = [key for key in REQUIRED_FRONTMATTER_KEYS if not frontmatter.get(key)]
     if missing_keys:
@@ -108,6 +128,11 @@ def validate_skill(skill_dir: Path) -> list[str]:
         missing = find_missing_fragments(text, REVIEW_REQUIRED_FRAGMENTS)
         if missing:
             issues.append(f"审查类 Skill 缺少关键信息: {', '.join(missing)}")
+
+    if skill_dir.name in ANDROID_COMPOSE_PREVIEW_SKILLS:
+        missing = find_missing_fragments(bundle_text, ANDROID_COMPOSE_PREVIEW_REQUIRED_FRAGMENTS)
+        if missing:
+            issues.append(f"Android Compose Preview 缺少关键信息: {', '.join(missing)}")
 
     return issues
 

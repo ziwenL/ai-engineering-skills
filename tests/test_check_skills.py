@@ -490,6 +490,12 @@ class CheckSkillsScriptTest(unittest.TestCase):
             """
             # Default Stack
             - 默认：Jetpack Compose
+            - Compose Coding Convention
+            - Every reusable UI component must provide @Preview
+            - Business Screen with ViewModel injection does not require @Preview
+            - Preview data should use fake/mock data
+            - Preview function should be private
+            - Preview should not contain network/database dependency
             """,
         )
 
@@ -497,6 +503,56 @@ class CheckSkillsScriptTest(unittest.TestCase):
 
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assertIn("[OK] android-app-scaffold", result.stdout)
+
+    def test_fails_when_android_development_lacks_compose_preview_conventions(self) -> None:
+        write_text(
+            self.temp_dir / "skills" / "android-development" / "SKILL.md",
+            """
+            ---
+            name: android-development
+            description: 示例
+            ---
+
+            # Android 开发 Skill
+
+            ## 适用场景
+            - Android 功能开发
+
+            ## 输入
+            - 已确认需求
+            - `checklist.md`
+
+            ## 工作流程
+            1. 阅读 `checklist.md`
+            2. 实现最小改动
+            3. 运行验证命令
+
+            ## 输出格式
+            ```text
+            【验证结果】
+            【未验证项】
+            ```
+
+            ## 约束
+            - 不做无关重构
+
+            ## 不适用场景
+            - 纯 iOS 任务
+            """,
+        )
+        write_text(
+            self.temp_dir / "skills" / "android-development" / "checklist.md",
+            """
+            # Android Checklist
+            - [ ] 验证
+            """,
+        )
+
+        result = self.run_check()
+
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("Compose Preview", result.stdout)
+        self.assertIn("@Preview", result.stdout)
 
     def test_passes_for_ios_app_scaffold_with_referenced_support_files(self) -> None:
         sections = "\n\n".join(

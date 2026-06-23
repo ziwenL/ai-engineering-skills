@@ -8,6 +8,14 @@
 - 使用 AndroidX、Gradle Kotlin DSL，并为网络、数据、导航保留清晰边界
 - 第一阶段只要求最小可运行页面、基础主题、应用入口和必要占位层
 
+## Compose Coding Convention
+
+- Every reusable UI component must provide `@Preview`
+- Business Screen with `ViewModel` injection does not require `@Preview`
+- Preview data should use `fake/mock` data
+- Preview function should be `private`
+- Preview should not contain `network/database` dependency
+
 ## 备选方案
 
 - 如果项目明确要求沿用 XML View，可切换到 `XML + ViewModel`
@@ -23,7 +31,7 @@
 
 ## 何时切换到备选方案
 
-- 团队已有明确的横切分层约定，且后续代码审查、模板和示例都依赖 `ui / data / domain / core`
+- 团队已有明确的横切分层约定，且后续代码评审、模板和示例都依赖 `ui / data / domain / core`
 - 已有明确组织规范要求 XML、模块化、构建插件体系或特殊兼容方案
 - 第一阶段就存在复杂并行开发边界，需要通过模块拆分降低耦合
 - 产品验证依赖既有 Android 基础设施，默认方案无法无痛接入
